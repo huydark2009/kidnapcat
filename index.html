@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeowKisser – Discord Bot</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #fdf4ff;
+    --surface: #ffffff;
+    --border: #f0d6ff;
+    --pink: #f472b6;
+    --purple: #a855f7;
+    --lavender: #e9d5ff;
+    --text: #3b1f4e;
+    --muted: #9b7ab8;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+  }
+  .bg-deco { position: fixed; pointer-events: none; z-index: 0; border-radius: 50%; }
+  .bg-deco-1 { top: -80px; left: -80px; width: 350px; height: 350px; background: radial-gradient(circle, #f9a8d4, transparent 70%); opacity: 0.4; }
+  .bg-deco-2 { bottom: -80px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, #d8b4fe, transparent 70%); opacity: 0.4; }
+  .paw { position: fixed; font-size: 1.5rem; opacity: 0.07; pointer-events: none; animation: floatPaw 6s ease-in-out infinite; }
+  .paw:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+  .paw:nth-child(2) { top: 25%; right: 8%; animation-delay: 1s; }
+  .paw:nth-child(3) { top: 60%; left: 3%; animation-delay: 2s; }
+  .paw:nth-child(4) { bottom: 15%; right: 5%; animation-delay: 3s; }
+  @keyframes floatPaw {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(10deg); }
+  }
+  .wrapper {
+    position: relative; z-index: 10;
+    width: 100%; max-width: 520px;
+    padding: 52px 24px 64px;
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .hero { text-align: center; margin-bottom: 28px; animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) both; }
+  .cat-emoji { font-size: 4rem; display: block; margin-bottom: 10px; animation: bounce 2.5s ease-in-out infinite; }
+  .cat-logo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 14px; border: 3px solid var(--border); box-shadow: 0 4px 20px rgba(168,85,247,0.2); animation: bounce 2.5s ease-in-out infinite; }
+  @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  h1 {
+    font-size: 2.8rem; font-weight: 900; letter-spacing: -1px; line-height: 1; margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .tagline { color: var(--muted); font-size: 0.88rem; font-weight: 600; line-height: 1.7; }
+
+  /* Invite button */
+  .btn-invite {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 17px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: white; font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 800;
+    border-radius: 16px; text-decoration: none; transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(168,85,247,0.25);
+    margin-bottom: 12px;
+    animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) 0.1s both;
+  }
+  .btn-invite:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(168,85,247,0.4); }
+
+  /* Grid */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 10px; }
+  .grid.full { grid-template-columns: 1fr; }
+  .grid:nth-of-type(1) { animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) 0.15s both; }
+  .grid:nth-of-type(2) { animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) 0.2s both; }
+
+  .card {
+    background: var(--surface); border: 2px solid var(--border); border-radius: 18px;
+    padding: 20px 16px; text-decoration: none; color: var(--text);
+    transition: all 0.2s ease; position: relative; overflow: hidden;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(168,85,247,0.13); }
+  .card-owner  { border-color: #e9d5ff; background: linear-gradient(135deg, #f9f0ff, #fff); }
+  .card-terms  { border-color: #fde68a; background: linear-gradient(135deg, #fffbeb, #fff); }
+  .card-privacy{ border-color: #bfdbfe; background: linear-gradient(135deg, #eff8ff, #fff); }
+  .card-icon { font-size: 1.7rem; margin-bottom: 2px; }
+  .card-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+  .card-owner  .card-label { color: var(--purple); }
+  .card-terms  .card-label { color: #d97706; }
+  .card-privacy .card-label { color: #3b82f6; }
+  .card-title { font-size: 0.95rem; font-weight: 800; }
+  .card-desc  { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+  .card-arrow { position: absolute; top: 14px; right: 14px; font-size: 0.9rem; color: var(--muted); transition: transform 0.2s; }
+  .card:hover .card-arrow { transform: translate(3px, -3px); }
+
+  .footer { color: var(--muted); font-size: 0.75rem; font-weight: 700; text-align: center; margin-top: 10px; animation: popIn 0.5s ease 0.25s both; }
+  .footer span { background: linear-gradient(90deg, var(--pink), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.93) translateY(14px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @media (max-width: 400px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 2.2rem; } }
+</style>
+</head>
+<body>
+  <div class="bg-deco bg-deco-1"></div>
+  <div class="bg-deco bg-deco-2"></div>
+  <div class="paw">🐾</div>
+  <div class="paw">🐾</div>
+  <div class="paw">🐾</div>
+  <div class="paw">🐾</div>
+
+  <div class="wrapper">
+    <div class="hero">
+      <img class="cat-logo" src="data:image/jpeg;base64,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" alt="MeowKisser">
+      <h1>MeowKisser</h1>
+      <p class="tagline">Bot Discord thuần Việt · Couple · Bắt cóc<br>Cửa hàng ảo · Nhiệm vụ hàng ngày 🎀</p>
+    </div>
+
+    <a href="https://discord.com/oauth2/authorize?client_id=1480712397122437272" class="btn-invite">
+      ✨ Thêm MeowKisser vào Server của bạn
+    </a>
+
+    <div class="grid">
+      <a href="https://discord.com/users/1302957003152425000" class="card card-owner" target="_blank">
+        <span class="card-icon">👤</span>
+        <div class="card-label">Chủ Bot</div>
+        <div class="card-title">Hồ Sơ Discord</div>
+        <div class="card-desc">Liên hệ tác giả</div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a href="terms.html" class="card card-terms">
+        <span class="card-icon">📜</span>
+        <div class="card-label">Pháp lý</div>
+        <div class="card-title">Điều Khoản</div>
+        <div class="card-desc">Điều khoản dịch vụ</div>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="grid full">
+      <a href="privacy.html" class="card card-privacy">
+        <span class="card-icon">🔒</span>
+        <div class="card-label">Pháp lý</div>
+        <div class="card-title">Chính Sách Bảo Mật</div>
+        <div class="card-desc">Cách chúng tôi bảo vệ dữ liệu của bạn</div>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+
+    <p class="footer">© 2025 <span>MeowKisser Bot</span> · Made with 🐾 in Vietnam</p>
+  </div>
+</body>
+</html>
